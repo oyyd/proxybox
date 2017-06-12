@@ -2,7 +2,7 @@
   "name": "proxybox",
   "version": "1.0.0",
   "description": "Proxy tools basing on the SOCKS protocol and relative implementations.",
-  "main": "lib/main.js",
+  "main": "lib/main_entry.js",
   "scripts": {
     "pack": "export CSC_IDENTITY_AUTO_DISCOVERY=false && build --dir",
     "build": "babel src --out-dir lib --source-maps inline",
@@ -27,7 +27,6 @@
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
-    "semantic-ui-css": "^2.2.10",
     "semantic-ui-react": "^0.68.5"
   },
   "babel": {
@@ -44,6 +43,7 @@
         "never"
       ],
       "import/no-extraneous-dependencies": 0,
+      "import/prefer-default-export": 0,
       "react/jsx-filename-extension": 0,
       "react/prefer-stateless-function": 0
     },

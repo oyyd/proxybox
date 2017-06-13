@@ -1,30 +1,49 @@
 import { Menu, Tray } from 'electron'
 import { createNativeImage } from './utils/img'
 
-function getMenu() {
+export const EVENTS = {
+  OPEN_WINDOW: 'OPEN_WINDOW',
+  EXIT: 'EXIT',
+}
+
+function getMenu(clickHandler) {
+  const { trigger } = clickHandler
+
   return [{
     label: '打开窗口',
     type: 'normal',
+    click: trigger.bind(null, EVENTS.OPEN_WINDOW),
   }, {
     type: 'separator',
   }, {
     label: '退出',
     type: 'normal',
+    click: trigger.bind(null, EVENTS.EXIT),
   }]
 }
 
 function createClickHandler() {
   let next = null
 
-  const trigger = (...args) => (typeof next === 'function' ? next(...args) : null)
+  const trigger = (...args) => {
+    if (typeof next !== 'function') {
+      return
+    }
+
+    next(...args)
+  }
+
+  const onClick = n => (next = n)
 
   return {
     trigger,
+    onClick,
   }
 }
 
 export function createTrayMenu() {
-  const menu = getMenu()
+  const clickHandler = createClickHandler()
+  const menu = getMenu(clickHandler)
   const tray = new Tray(
     createNativeImage('icon48.png', {
       width: 18,
@@ -40,6 +59,6 @@ export function createTrayMenu() {
 
   return {
     tray,
-    onClick,
+    onClick: clickHandler.onClick,
   }
 }

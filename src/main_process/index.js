@@ -1,46 +1,41 @@
-import { app, BrowserWindow } from 'electron'
-import path from 'path'
-import url from 'url'
-import { createTrayMenu } from './tray'
+import { app } from 'electron'
+import { EVENTS, createTrayMenu } from './tray'
+import { createWindow } from './window'
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-let win
+const { OPEN_WINDOW, EXIT } = EVENTS
 
-function createWindow() {
-  return
-  // Create the browser window.
-  win = new BrowserWindow({ width: 800, height: 600 })
+function onMenuClicked(ctx, event) {
+  // eslint-disable-next-line
+  const { app } = ctx
 
-  // and load the index.html of the app.
-  win.loadURL(
-    url.format({
-      pathname: path.join(__dirname, '../../assets/app.html'),
-      protocol: 'file:',
-      slashes: true,
-    }),
-  )
+  switch (event) {
+    case OPEN_WINDOW: {
+      createWindow()
+      break
+    }
+    case EXIT: {
+      app.quit()
+      break
+    }
 
-  // Open the DevTools.
-  win.webContents.openDevTools()
-
-  // Emitted when the window is closed.
-  win.on('closed', () => {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    win = null
-  })
+    default: {
+      throw new Error(`unexpected event: ${event}`)
+    }
+  }
 }
 
 export default function main() {
+  const ctx = {
+    app,
+  }
+  let trayInfo = null
+
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
-  app.on('ready', createWindow)
-
   app.on('ready', () => {
-    createTrayMenu()
+    trayInfo = createTrayMenu()
+    trayInfo.onClick(onMenuClicked.bind(null, ctx))
   })
 
   // Quit when all windows are closed.
@@ -55,9 +50,9 @@ export default function main() {
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (win === null) {
-      createWindow()
-    }
+    // if (win === null) {
+    //   createWindow()
+    // }
   })
 }
 

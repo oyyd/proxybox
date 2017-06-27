@@ -1,14 +1,23 @@
 import { app } from 'electron'
 import { EVENTS, createTrayMenu } from './tray'
 import { createWindow } from './window'
+import { start } from './ss_binding'
 
-const { OPEN_WINDOW, EXIT } = EVENTS
+const {
+  OPEN_WINDOW,
+  EXIT,
+  OPEN_SS,
+} = EVENTS
 
 function onMenuClicked(ctx, event) {
   // eslint-disable-next-line
   const { app } = ctx
 
   switch (event) {
+    case OPEN_SS: {
+      start()
+      break
+    }
     case OPEN_WINDOW: {
       createWindow()
       break

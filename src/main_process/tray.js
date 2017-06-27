@@ -4,6 +4,7 @@ import { createNativeImage } from './utils/img'
 export const EVENTS = {
   OPEN_WINDOW: 'OPEN_WINDOW',
   EXIT: 'EXIT',
+  OPEN_SS: 'OPEN_SS',
 }
 
 function getMenu(clickHandler) {
@@ -13,6 +14,10 @@ function getMenu(clickHandler) {
     label: '打开窗口',
     type: 'normal',
     click: trigger.bind(null, EVENTS.OPEN_WINDOW),
+  }, {
+    label: '开启ss',
+    type: 'normal',
+    click: trigger.bind(null, EVENTS.OPEN_SS),
   }, {
     type: 'separator',
   }, {

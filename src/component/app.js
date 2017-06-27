@@ -1,6 +1,19 @@
 import React, { Component } from 'react'
 import { object } from 'prop-types'
+import Menu from './menu'
 import SSConfig from './ss_config'
+
+const MENUS = [{
+  name: '运行',
+  id: 0,
+  Comp: SSConfig,
+}, {
+  name: 'ss',
+  id: 1,
+}, {
+  name: 'http-proxy',
+  id: 2,
+}]
 
 class App extends Component {
   constructor(props) {
@@ -14,7 +27,10 @@ class App extends Component {
 
     return (
       <div>
-        <SSConfig />
+        <Menu
+          menus={MENUS}
+          onChange={id => console.log('id', id)}
+        />
       </div>
     )
   }

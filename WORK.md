@@ -17,3 +17,5 @@
   - hpts
   - pac
   - os-proxy
+- others
+  - shrink package size

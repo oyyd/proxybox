@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { object } from 'prop-types'
 import Menu from './menu'
 import SSConfig from './ss_config'
+import HTPSConfig from './htps_config'
 
 const MENUS = [{
   name: '运行',
@@ -13,6 +14,7 @@ const MENUS = [{
 }, {
   name: 'HTTP PROXY',
   id: 2,
+  Comp: HTPSConfig,
 }]
 
 class App extends Component {

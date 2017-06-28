@@ -1,9 +1,11 @@
 import { app, ipcMain } from 'electron'
+import path from 'path'
 import { createTrayMenu } from './tray'
 import { createWindow } from './window'
-import { start } from './ss_binding'
+import { start as startSS, stop as stopSS, restart as restartSS } from './ss_binding'
 import * as MSG from '../message'
 import { getConfig, saveConfig } from './storage'
+import { start, stop, restart } from './pm'
 
 const {
   UPDATE_SS_CONFIG,
@@ -13,7 +15,13 @@ const {
   OPEN_SS,
   STOP_SS,
   RESTART_SS,
+  START_HPTS,
+  STOP_HPTS,
+  RESTART_HPTS,
 } = MSG
+
+const HPTS_PROCESS_NAME = 'hpts'
+const HPTS_CLI_PATH = path.resolve(__dirname, '../../node_modules/http-proxy-to-socks/bin/hpts.js')
 
 function onMenuClicked(ctx, event) {
   // eslint-disable-next-line
@@ -21,15 +29,15 @@ function onMenuClicked(ctx, event) {
 
   switch (event) {
     case OPEN_SS: {
-      start(config.ss)
+      startSS(config.ss)
       break
     }
     case STOP_SS: {
-      stop()
+      stopSS()
       break
     }
     case RESTART_SS: {
-      stop(config.ss)
+      restartSS(config.ss)
       break
     }
     case OPEN_WINDOW: {
@@ -89,7 +97,24 @@ export default function main() {
     // eslint-disable-next-line
     event.returnValue = ctx.config
   })
-}
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+  const HPTS_DEFAULT_CONFIG = ''
+
+  ipcMain.on(START_HPTS, (event) => {
+    start(HPTS_PROCESS_NAME, HPTS_CLI_PATH, HPTS_DEFAULT_CONFIG)
+
+    event.sender.send('success')
+  })
+
+  ipcMain.on(STOP_HPTS, (event) => {
+    stop(HPTS_PROCESS_NAME, HPTS_CLI_PATH, HPTS_DEFAULT_CONFIG)
+
+    event.sender.send('success')
+  })
+
+  ipcMain.on(RESTART_HPTS, (event) => {
+    restart(HPTS_PROCESS_NAME, HPTS_CLI_PATH, HPTS_DEFAULT_CONFIG)
+
+    event.sender.send('success')
+  })
+}

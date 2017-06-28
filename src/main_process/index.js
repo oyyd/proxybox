@@ -1,21 +1,35 @@
-import { app } from 'electron'
-import { EVENTS, createTrayMenu } from './tray'
+import { app, ipcMain } from 'electron'
+import { createTrayMenu } from './tray'
 import { createWindow } from './window'
 import { start } from './ss_binding'
+import * as MSG from '../message'
+import { getConfig, saveConfig } from './storage'
 
 const {
+  UPDATE_SS_CONFIG,
+  GET_CONFIG,
   OPEN_WINDOW,
   EXIT,
   OPEN_SS,
-} = EVENTS
+  STOP_SS,
+  RESTART_SS,
+} = MSG
 
 function onMenuClicked(ctx, event) {
   // eslint-disable-next-line
-  const { app } = ctx
+  const { app, config } = ctx
 
   switch (event) {
     case OPEN_SS: {
-      start()
+      start(config.ss)
+      break
+    }
+    case STOP_SS: {
+      stop()
+      break
+    }
+    case RESTART_SS: {
+      stop(config.ss)
       break
     }
     case OPEN_WINDOW: {
@@ -36,7 +50,9 @@ function onMenuClicked(ctx, event) {
 export default function main() {
   const ctx = {
     app,
+    config: getConfig(),
   }
+
   let trayInfo = null
 
   // This method will be called when Electron has finished
@@ -62,6 +78,16 @@ export default function main() {
     // if (win === null) {
     //   createWindow()
     // }
+  })
+
+  ipcMain.on(UPDATE_SS_CONFIG, (event, arg) => {
+    Object.assign(ctx.config.ss.proxyOptions, arg)
+    saveConfig(ctx.config)
+  })
+
+  ipcMain.on(GET_CONFIG, (event) => {
+    // eslint-disable-next-line
+    event.returnValue = ctx.config
   })
 }
 

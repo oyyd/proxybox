@@ -1,11 +1,6 @@
 import { Menu, Tray } from 'electron'
 import { createNativeImage } from './utils/img'
-
-export const EVENTS = {
-  OPEN_WINDOW: 'OPEN_WINDOW',
-  EXIT: 'EXIT',
-  OPEN_SS: 'OPEN_SS',
-}
+import * as EVENTS from '../message'
 
 function getMenu(clickHandler) {
   const { trigger } = clickHandler

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Menu } from 'semantic-ui-react'
-import { func, array } from 'prop-types'
+import { number, func, array } from 'prop-types'
 
 class MenuExampleTabular extends Component {
   constructor(props) {
@@ -9,7 +9,7 @@ class MenuExampleTabular extends Component {
     this.handleItemClick = this.handleItemClick.bind(this)
 
     this.state = {
-      activeItem: props.menus[0].id,
+      activeItem: props.initialId,
     }
   }
 
@@ -28,7 +28,7 @@ class MenuExampleTabular extends Component {
         tabular
       >
         {menus.map(item => (
-          <Menu.Menu
+          <Menu.Item
             key={item.id}
             name={item.name}
             active={activeItem === item.id}
@@ -41,6 +41,7 @@ class MenuExampleTabular extends Component {
 }
 
 MenuExampleTabular.propTypes = {
+  initialId: number.isRequired,
   menus: array.isRequired,
   onChange: func.isRequired,
 }

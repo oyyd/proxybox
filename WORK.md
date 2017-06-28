@@ -7,6 +7,7 @@
 - data persistence
   - config
   - log?
+  - TODO: where to store?
 - UI
   - SPA
     - support simple route

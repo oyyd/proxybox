@@ -1,0 +1,7 @@
+export const OPEN_WINDOW = 'OPEN_WINDOW'
+export const EXIT = 'EXIT'
+export const OPEN_SS = 'OPEN_SS'
+export const STOP_SS = 'STOP_SS'
+export const RESTART_SS = 'RESTART_SS'
+export const GET_CONFIG = 'GET_CONFIG'
+export const UPDATE_SS_CONFIG = 'UPDATE_SS_CONFIG'

@@ -5,6 +5,7 @@ import { createWindow } from './window'
 import * as MSG from '../message'
 import { getConfig, saveConfig } from './storage'
 import { start, stop, restart } from './pm'
+import { enable, disable, set } from './os_proxy'
 
 const {
   UPDATE_SS_CONFIG,
@@ -17,6 +18,9 @@ const {
   START_HPTS,
   STOP_HPTS,
   RESTART_HPTS,
+  ENABLE_PROXY,
+  DISABLE_PROXY,
+  SET_PROXY,
 } = MSG
 
 const HPTS_PROCESS_NAME = 'hpts'
@@ -124,5 +128,44 @@ export default function main() {
     restart(SS_PROCESS_NAME, SSLOCAL_PATH, SS_DEFAULT_CONFIG)
 
     event.sender.send('success')
+  })
+
+  ipcMain.on(ENABLE_PROXY, (event) => {
+    enable().then(() => {
+      event.sender.send({
+        success: true,
+      })
+    }).catch((err) => {
+      event.sender.send({
+        success: false,
+        message: err.message,
+      })
+    })
+  })
+
+  ipcMain.on(DISABLE_PROXY, (event) => {
+    disable().then(() => {
+      event.sender.send({
+        success: true,
+      })
+    }).catch((err) => {
+      event.sender.send({
+        success: false,
+        message: err.message,
+      })
+    })
+  })
+
+  ipcMain.on(SET_PROXY, (event, arg) => {
+    set(arg).then(() => {
+      event.sender.send({
+        success: true,
+      })
+    }).catch((err) => {
+      event.sender.send({
+        success: false,
+        message: err.message,
+      })
+    })
   })
 }

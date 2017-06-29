@@ -3,10 +3,12 @@ import { object } from 'prop-types'
 import Menu from './menu'
 import SSConfig from './ss_config'
 import HTPSConfig from './htps_config'
+import ProcessStatus from './process_status'
 
 const MENUS = [{
   name: '运行',
   id: 0,
+  Comp: ProcessStatus,
 }, {
   name: 'SS',
   id: 1,

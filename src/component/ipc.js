@@ -10,6 +10,9 @@ const {
   START_SS,
   STOP_SS,
   RESTART_SS,
+  ENABLE_PROXY,
+  DISABLE_PROXY,
+  SET_PROXY,
 } = MSG
 
 export function updateSSConfig(config) {
@@ -42,4 +45,16 @@ export function stopSS() {
 
 export function restartSS() {
   return ipcRenderer.send(RESTART_SS)
+}
+
+export function enableProxy() {
+  return ipcRenderer.send(ENABLE_PROXY)
+}
+
+export function disableProxy() {
+  return ipcRenderer.send(DISABLE_PROXY)
+}
+
+export function setProxy(config) {
+  return ipcRenderer.send(SET_PROXY, config)
 }

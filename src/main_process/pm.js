@@ -165,7 +165,7 @@ export function list() {
 if (module === require.main) {
   list().then((apps) => {
     // eslint-disable-next-line
-    console.log('apps', apps)
+    console.log('apps', apps[0].pm2_env.status)
     return disconnect()
   // eslint-disable-next-line
   }).catch(err => console.error(err))

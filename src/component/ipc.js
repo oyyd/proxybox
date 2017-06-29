@@ -1,4 +1,5 @@
 import { ipcRenderer } from 'electron'
+import EventEmitter from 'events'
 import * as MSG from '../message'
 
 const {
@@ -13,7 +14,23 @@ const {
   ENABLE_PROXY,
   DISABLE_PROXY,
   SET_PROXY,
+  GET_PROCESS_STATUS,
+  PROCESS_STATUS_UPDATED,
 } = MSG
+
+const e = new EventEmitter()
+
+ipcRenderer.on(PROCESS_STATUS_UPDATED, (event, res) => {
+  e.emit(PROCESS_STATUS_UPDATED, res)
+})
+
+export function bindProcessStatusUpdated(next) {
+  e.on(PROCESS_STATUS_UPDATED, next)
+}
+
+export function unbindProcessStatusUpdated(next) {
+  e.removeListener(PROCESS_STATUS_UPDATED, next)
+}
 
 export function updateSSConfig(config) {
   return ipcRenderer.send(UPDATE_SS_CONFIG, config)
@@ -57,4 +74,8 @@ export function disableProxy() {
 
 export function setProxy(config) {
   return ipcRenderer.send(SET_PROXY, config)
+}
+
+export function getProcessStatus() {
+  return ipcRenderer.send(GET_PROCESS_STATUS)
 }

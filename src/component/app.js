@@ -30,7 +30,7 @@ class App extends Component {
   }
 
   render() {
-    const { config } = this.props
+    // const { config } = this.props
     const { id } = this.state
     const item = MENUS.find(i => i.id === id)
     const element = item.Comp ? React.createElement(item.Comp) : null

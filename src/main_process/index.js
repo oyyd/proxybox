@@ -4,7 +4,7 @@ import { createTrayMenu } from './tray'
 import { createWindow } from './window'
 import * as MSG from '../message'
 import { getConfig, saveConfig } from './storage'
-import { start, stop, restart } from './pm'
+import { start, stop, restart, list } from './pm'
 import { enable, disable, set } from './os_proxy'
 
 const {
@@ -21,6 +21,8 @@ const {
   ENABLE_PROXY,
   DISABLE_PROXY,
   SET_PROXY,
+  GET_PROCESS_STATUS,
+  PROCESS_STATUS_UPDATED,
 } = MSG
 
 const HPTS_PROCESS_NAME = 'hpts'
@@ -28,6 +30,11 @@ const HPTS_CLI_PATH = path.resolve(__dirname, '../../node_modules/http-proxy-to-
 const SS_PROCESS_NAME = 'ss'
 const SSLOCAL_PATH = path.resolve(__dirname, '../../node_modules/shadowsocks-js/lib/ssLocal.js')
 const SS_DEFAULT_CONFIG = '-k holic123 -s kr.oyyd.net'
+
+function handleError(err) {
+  // eslint-disable-next-line
+  console.error(err)
+}
 
 function onMenuClicked(ctx, event) {
   // eslint-disable-next-line
@@ -132,40 +139,34 @@ export default function main() {
 
   ipcMain.on(ENABLE_PROXY, (event) => {
     enable().then(() => {
-      event.sender.send({
-        success: true,
-      })
-    }).catch((err) => {
-      event.sender.send({
-        success: false,
-        message: err.message,
-      })
-    })
+      // event.sender.send({
+      //   success: true,
+      // })
+    }).catch(handleError)
   })
 
   ipcMain.on(DISABLE_PROXY, (event) => {
     disable().then(() => {
-      event.sender.send({
-        success: true,
-      })
-    }).catch((err) => {
-      event.sender.send({
-        success: false,
-        message: err.message,
-      })
-    })
+      // event.sender.send({
+      //   success: true,
+      // })
+    }).catch(handleError)
   })
 
   ipcMain.on(SET_PROXY, (event, arg) => {
     set(arg).then(() => {
-      event.sender.send({
+      // event.sender.send({
+      //   success: true,
+      // })
+    }).catch(handleError)
+  })
+
+  ipcMain.on(GET_PROCESS_STATUS, (event) => {
+    list().then((apps) => {
+      event.sender.send(PROCESS_STATUS_UPDATED, {
         success: true,
+        apps,
       })
-    }).catch((err) => {
-      event.sender.send({
-        success: false,
-        message: err.message,
-      })
-    })
+    }).catch(handleError)
   })
 }

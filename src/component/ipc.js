@@ -7,6 +7,9 @@ const {
   START_HPTS,
   STOP_HPTS,
   RESTART_HPTS,
+  START_SS,
+  STOP_SS,
+  RESTART_SS,
 } = MSG
 
 export function updateSSConfig(config) {
@@ -27,4 +30,16 @@ export function stopHTPS() {
 
 export function restartHTPS() {
   return ipcRenderer.send(RESTART_HPTS)
+}
+
+export function startSS() {
+  return ipcRenderer.send(START_SS)
+}
+
+export function stopSS() {
+  return ipcRenderer.send(STOP_SS)
+}
+
+export function restartSS() {
+  return ipcRenderer.send(RESTART_SS)
 }

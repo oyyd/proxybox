@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Button, Divider, Form, Input } from 'semantic-ui-react'
-import { updateSSConfig, getSSConfig } from './ipc'
+import { startSS, stopSS, restartSS,
+  updateSSConfig, getSSConfig } from './ipc'
 
 const FIELDS = [{
   name: 'serverAddr',
@@ -70,9 +71,9 @@ class SSConfig extends Component {
         </Form.Group>
         <Button primary type="submit">修改</Button>
         <div>
-          <Button>开始</Button>
-          <Button>结束</Button>
-          <Button>重新启动</Button>
+          <Button onClick={() => startSS()}>开始</Button>
+          <Button onClick={() => stopSS()}>结束</Button>
+          <Button onClick={() => restartSS()}>重新启动</Button>
         </div>
         <Divider hidden />
       </Form>

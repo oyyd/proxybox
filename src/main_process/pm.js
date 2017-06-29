@@ -51,9 +51,13 @@ function handleError(err) {
   })
 }
 
+function getProcessName(name) {
+  return `${PROCESS_UNIQUE_NAME}:${name}`
+}
+
 function getPM2Config(name, script, args) {
   const pm2Config = Object.assign({}, PM2_DEFAULT_CONFIG, {
-    name: `${PROCESS_UNIQUE_NAME}:${name}`,
+    name: getProcessName(name),
     script,
     args,
   })
@@ -61,8 +65,8 @@ function getPM2Config(name, script, args) {
   return pm2Config
 }
 
-function _start(name, script, args = '') {
-  const pm2Config = getPM2Config(name, script, args)
+function _start(_name, script, args = '') {
+  const pm2Config = getPM2Config(_name, script, args)
 
   return connect().then(() => new Promise((resolve) => {
     pm2.start(pm2Config, (err, apps) => {
@@ -97,7 +101,8 @@ function getRunningInfo(name) {
   })
 }
 
-function _stop(name /* , script, args*/) {
+function _stop(_name /* , script, args*/) {
+  const name = getProcessName(_name)
   return connect()
     .then(() => getRunningInfo(name))
     .then((isRunning) => {

@@ -2,7 +2,6 @@ import { app, ipcMain } from 'electron'
 import path from 'path'
 import { createTrayMenu } from './tray'
 import { createWindow } from './window'
-import { start as startSS, stop as stopSS, restart as restartSS } from './ss_binding'
 import * as MSG from '../message'
 import { getConfig, saveConfig } from './storage'
 import { start, stop, restart } from './pm'
@@ -12,7 +11,7 @@ const {
   GET_CONFIG,
   OPEN_WINDOW,
   EXIT,
-  OPEN_SS,
+  START_SS,
   STOP_SS,
   RESTART_SS,
   START_HPTS,
@@ -22,24 +21,15 @@ const {
 
 const HPTS_PROCESS_NAME = 'hpts'
 const HPTS_CLI_PATH = path.resolve(__dirname, '../../node_modules/http-proxy-to-socks/bin/hpts.js')
+const SS_PROCESS_NAME = 'ss'
+const SSLOCAL_PATH = path.resolve(__dirname, '../../node_modules/shadowsocks-js/lib/ssLocal.js')
+const SS_DEFAULT_CONFIG = '-k holic123 -s kr.oyyd.net'
 
 function onMenuClicked(ctx, event) {
   // eslint-disable-next-line
   const { app, config } = ctx
 
   switch (event) {
-    case OPEN_SS: {
-      startSS(config.ss)
-      break
-    }
-    case STOP_SS: {
-      stopSS()
-      break
-    }
-    case RESTART_SS: {
-      restartSS(config.ss)
-      break
-    }
     case OPEN_WINDOW: {
       createWindow()
       break
@@ -114,6 +104,24 @@ export default function main() {
 
   ipcMain.on(RESTART_HPTS, (event) => {
     restart(HPTS_PROCESS_NAME, HPTS_CLI_PATH, HPTS_DEFAULT_CONFIG)
+
+    event.sender.send('success')
+  })
+
+  ipcMain.on(START_SS, (event) => {
+    start(SS_PROCESS_NAME, SSLOCAL_PATH, SS_DEFAULT_CONFIG)
+
+    event.sender.send('success')
+  })
+
+  ipcMain.on(STOP_SS, (event) => {
+    stop(SS_PROCESS_NAME, SSLOCAL_PATH, SS_DEFAULT_CONFIG)
+
+    event.sender.send('success')
+  })
+
+  ipcMain.on(RESTART_SS, (event) => {
+    restart(SS_PROCESS_NAME, SSLOCAL_PATH, SS_DEFAULT_CONFIG)
 
     event.sender.send('success')
   })

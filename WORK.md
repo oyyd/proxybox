@@ -3,7 +3,10 @@
 - main process
 - sub process
   - sslocal
+    - bind sslocal [done]
   - hpts
+  - logs
+  - processes status
 - data persistence
   - config
   - log?

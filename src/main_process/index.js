@@ -1,4 +1,4 @@
-import { app, ipcMain } from 'electron'
+import { app } from 'electron'
 import path from 'path'
 import { createTrayMenu } from './tray'
 import { createWindow } from './window'
@@ -22,8 +22,9 @@ const {
   DISABLE_PROXY,
   SET_PROXY,
   GET_PROCESS_STATUS,
-  PROCESS_STATUS_UPDATED,
 } = MSG
+
+const { mainOn } = MSG
 
 const HPTS_PROCESS_NAME = 'hpts'
 const HPTS_CLI_PATH = path.resolve(__dirname, '../../node_modules/http-proxy-to-socks/bin/hpts.js')
@@ -34,6 +35,11 @@ const SS_DEFAULT_CONFIG = '-k holic123 -s kr.oyyd.net'
 function handleError(err) {
   // eslint-disable-next-line
   console.error(err)
+}
+
+function catchAndResponse(promise) {
+  console.log('promise', promise)
+  return promise
 }
 
 function onMenuClicked(ctx, event) {
@@ -89,84 +95,95 @@ export default function main() {
     // }
   })
 
-  ipcMain.on(UPDATE_SS_CONFIG, (event, arg) => {
-    Object.assign(ctx.config.ss.proxyOptions, arg)
+  mainOn(UPDATE_SS_CONFIG, args => catchAndResponse(new Promise(() => {
+    Object.assign(ctx.config.ss.proxyOptions, args)
     saveConfig(ctx.config)
-  })
 
-  ipcMain.on(GET_CONFIG, (event) => {
-    // eslint-disable-next-line
-    event.returnValue = ctx.config
-  })
+    return {
+      success: true,
+    }
+  })))
+
+  mainOn(GET_CONFIG, () => catchAndResponse(Promise.resolve(ctx.config)))
 
   const HPTS_DEFAULT_CONFIG = ''
 
-  ipcMain.on(START_HPTS, (event) => {
+  mainOn(START_HPTS, () => catchAndResponse(new Promise(() => {
     start(HPTS_PROCESS_NAME, HPTS_CLI_PATH, HPTS_DEFAULT_CONFIG)
 
-    event.sender.send('success')
-  })
+    return {
+      success: true,
+    }
+  })))
 
-  ipcMain.on(STOP_HPTS, (event) => {
+  mainOn(STOP_HPTS, () => catchAndResponse(new Promise(() => {
     stop(HPTS_PROCESS_NAME, HPTS_CLI_PATH, HPTS_DEFAULT_CONFIG)
 
-    event.sender.send('success')
-  })
+    return {
+      success: true,
+    }
+  })))
 
-  ipcMain.on(RESTART_HPTS, (event) => {
+  mainOn(RESTART_HPTS, () => catchAndResponse(new Promise(() => {
     restart(HPTS_PROCESS_NAME, HPTS_CLI_PATH, HPTS_DEFAULT_CONFIG)
 
-    event.sender.send('success')
-  })
+    return {
+      success: true,
+    }
+  })))
 
-  ipcMain.on(START_SS, (event) => {
+  mainOn(START_SS, () => catchAndResponse(new Promise(() => {
     start(SS_PROCESS_NAME, SSLOCAL_PATH, SS_DEFAULT_CONFIG)
 
-    event.sender.send('success')
-  })
+    return {
+      success: true,
+    }
+  })))
 
-  ipcMain.on(STOP_SS, (event) => {
+  mainOn(STOP_SS, () => catchAndResponse(new Promise(() => {
     stop(SS_PROCESS_NAME, SSLOCAL_PATH, SS_DEFAULT_CONFIG)
 
-    event.sender.send('success')
-  })
+    return {
+      success: true,
+    }
+  })))
 
-  ipcMain.on(RESTART_SS, (event) => {
+  mainOn(RESTART_SS, () => catchAndResponse(new Promise(() => {
     restart(SS_PROCESS_NAME, SSLOCAL_PATH, SS_DEFAULT_CONFIG)
 
-    event.sender.send('success')
-  })
+    return {
+      success: true,
+    }
+  })))
 
-  ipcMain.on(ENABLE_PROXY, (event) => {
-    enable().then(() => {
-      // event.sender.send({
-      //   success: true,
-      // })
-    }).catch(handleError)
-  })
-
-  ipcMain.on(DISABLE_PROXY, (event) => {
-    disable().then(() => {
-      // event.sender.send({
-      //   success: true,
-      // })
-    }).catch(handleError)
-  })
-
-  ipcMain.on(SET_PROXY, (event, arg) => {
-    set(arg).then(() => {
-      // event.sender.send({
-      //   success: true,
-      // })
-    }).catch(handleError)
-  })
-
-  ipcMain.on(GET_PROCESS_STATUS, (event) => {
-    list().then((apps) => {
-      event.sender.send(PROCESS_STATUS_UPDATED, {
+  mainOn(ENABLE_PROXY, () => catchAndResponse(new Promise((resolve) => {
+    return enable().then(() => {
+      resolve({
         success: true,
-        apps,
       })
-    }).catch(handleError)
-  })
+    })
+  })))
+
+  mainOn(DISABLE_PROXY, () => catchAndResponse(new Promise((resolve) => {
+    return disable().then(() => {
+      resolve({
+        success: true,
+      })
+    })
+  })))
+
+  mainOn(SET_PROXY, args => catchAndResponse(new Promise((resolve) => {
+    return set(args).then(() => {
+      resolve({
+        success: true,
+      })
+    })
+  })))
+
+  mainOn(GET_PROCESS_STATUS, () => catchAndResponse(list().then((apps) => {
+    return {
+      success: true,
+      apps,
+    }
+  })))
 }

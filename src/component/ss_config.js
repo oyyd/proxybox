@@ -37,9 +37,9 @@ class SSConfig extends Component {
   }
 
   componentWillMount() {
-    const config = getSSConfig()
-
-    this.setState(config.ss.proxyOptions)
+    getSSConfig().then((config) => {
+      this.setState(config.ss.proxyOptions)
+    })
   }
 
   // eslint-disable-next-line

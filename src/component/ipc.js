@@ -1,5 +1,3 @@
-import { ipcRenderer } from 'electron'
-import EventEmitter from 'events'
 import * as MSG from '../message'
 
 const {
@@ -15,67 +13,54 @@ const {
   DISABLE_PROXY,
   SET_PROXY,
   GET_PROCESS_STATUS,
-  PROCESS_STATUS_UPDATED,
 } = MSG
 
-const e = new EventEmitter()
-
-ipcRenderer.on(PROCESS_STATUS_UPDATED, (event, res) => {
-  e.emit(PROCESS_STATUS_UPDATED, res)
-})
-
-export function bindProcessStatusUpdated(next) {
-  e.on(PROCESS_STATUS_UPDATED, next)
-}
-
-export function unbindProcessStatusUpdated(next) {
-  e.removeListener(PROCESS_STATUS_UPDATED, next)
-}
+const { rendererSend } = MSG
 
 export function updateSSConfig(config) {
-  return ipcRenderer.send(UPDATE_SS_CONFIG, config)
+  return rendererSend(UPDATE_SS_CONFIG, config)
 }
 
 export function getSSConfig() {
-  return ipcRenderer.sendSync(GET_CONFIG)
+  return rendererSend(GET_CONFIG)
 }
 
 export function startHTPS() {
-  return ipcRenderer.send(START_HPTS)
+  return rendererSend(START_HPTS)
 }
 
 export function stopHTPS() {
-  return ipcRenderer.send(STOP_HPTS)
+  return rendererSend(STOP_HPTS)
 }
 
 export function restartHTPS() {
-  return ipcRenderer.send(RESTART_HPTS)
+  return rendererSend(RESTART_HPTS)
 }
 
 export function startSS() {
-  return ipcRenderer.send(START_SS)
+  return rendererSend(START_SS)
 }
 
 export function stopSS() {
-  return ipcRenderer.send(STOP_SS)
+  return rendererSend(STOP_SS)
 }
 
 export function restartSS() {
-  return ipcRenderer.send(RESTART_SS)
+  return rendererSend(RESTART_SS)
 }
 
 export function enableProxy() {
-  return ipcRenderer.send(ENABLE_PROXY)
+  return rendererSend(ENABLE_PROXY)
 }
 
 export function disableProxy() {
-  return ipcRenderer.send(DISABLE_PROXY)
+  return rendererSend(DISABLE_PROXY)
 }
 
 export function setProxy(config) {
-  return ipcRenderer.send(SET_PROXY, config)
+  return rendererSend(SET_PROXY, config)
 }
 
 export function getProcessStatus() {
-  return ipcRenderer.send(GET_PROCESS_STATUS)
+  return rendererSend(GET_PROCESS_STATUS)
 }

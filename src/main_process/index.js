@@ -32,13 +32,12 @@ const SS_PROCESS_NAME = 'ss'
 const SSLOCAL_PATH = path.resolve(__dirname, '../../node_modules/shadowsocks-js/lib/ssLocal.js')
 const SS_DEFAULT_CONFIG = '-k holic123 -s kr.oyyd.net'
 
-function handleError(err) {
-  // eslint-disable-next-line
-  console.error(err)
-}
+// function handleError(err) {
+//   // eslint-disable-next-line
+//   console.error(err)
+// }
 
 function catchAndResponse(promise) {
-  console.log('promise', promise)
   return promise
 }
 

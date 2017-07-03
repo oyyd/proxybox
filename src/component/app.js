@@ -6,11 +6,11 @@ import HTPSConfig from './htps_config'
 import ProcessStatus from './process_status'
 
 const MENUS = [{
-  name: '运行',
+  name: '运行状态',
   id: 0,
   Comp: ProcessStatus,
 }, {
-  name: 'SS',
+  name: 'SOCKS5(shadowsocks)',
   id: 1,
   Comp: SSConfig,
 }, {
@@ -24,8 +24,8 @@ class App extends Component {
     super(props)
 
     this.state = {
-      // id: MENUS[0].id,
-      id: MENUS[1].id,
+      id: MENUS[0].id,
+      // id: MENUS[1].id,
     }
   }
 

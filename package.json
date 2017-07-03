@@ -13,6 +13,7 @@
   "author": "oyyd <oyydoibh@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "fecha": "^2.3.1",
     "http-proxy-to-socks": "^1.0.2",
     "ip": "^1.1.5",
     "os-proxy-socks": "^1.0.0",
@@ -51,6 +52,7 @@
         2,
         "never"
       ],
+      "camelcase": 0,
       "no-underscore-dangle": 0,
       "arrow-body-style": 0,
       "import/no-extraneous-dependencies": 0,

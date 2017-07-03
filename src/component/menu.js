@@ -25,7 +25,8 @@ class MenuExampleTabular extends Component {
 
     return (
       <Menu
-        tabular
+        pointing
+        secondary
       >
         {menus.map(item => (
           <Menu.Item
